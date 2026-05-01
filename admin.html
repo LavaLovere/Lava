@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>СвятоЛаб — Адмін панель</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f5f0fa;
+    color: #1e1a2f;
+    min-height: 100vh;
+  }
+
+  :root {
+    --purple: #7b2cbf;
+    --purple-dark: #4a0e78;
+    --pink: #ff5c8a;
+    --gold: #ffcd3c;
+    --green: #06d6a0;
+    --orange: #ff9f1c;
+  }
+
+  /* ШАПКА */
+  .admin-header {
+    background: radial-gradient(circle at 10% 30%, #6a1b9a, #3c096c, #1a0b2e);
+    padding: 30px 24px;
+    text-align: center;
+    border-bottom-left-radius: 48px;
+    border-bottom-right-radius: 48px;
+  }
+
+  .admin-header h1 {
+    font-family: 'Paytone One', sans-serif;
+    font-size: 48px;
+    background: linear-gradient(135deg, #FFE6B0, #FFD966, #FFB347);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .admin-header p {
+    color: #fff9e8;
+    margin-top: 8px;
+  }
+
+  .header-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .go-to-site, .back-home {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 60px;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .go-to-site {
+    background: linear-gradient(135deg, #f58529, #dd2a7b);
+  }
+
+  .go-to-site:hover, .back-home:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.3);
+  }
+
+  /* ОСНОВНИЙ КОНТЕЙНЕР */
+  .admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* ФОРМА ДОДАВАННЯ */
+  .add-product-form {
+    background: white;
+    border-radius: 40px;
+    padding: 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  }
+
+  .form-title {
+    font-family: 'Paytone One', sans-serif;
+    font-size: 28px;
+    color: var(--purple-dark);
+    margin-bottom: 24px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-weight: 800;
+    color: var(--purple-dark);
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 12px 16px;
+    border: 2px solid #f0e6f5;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .checkbox-group input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .image-upload-section {
+    background: #f9f5ff;
+    border-radius: 28px;
+    padding: 16px;
+    margin-bottom: 8px;
+  }
+
+  .image-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .image-tab {
+    padding: 8px 16px;
+    background: #f0e9fa;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+
+  .image-tab.active {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+  }
+
+  .image-preview {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    margin-top: 12px;
+    border: 2px dashed #ddd;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .size-controls {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .size-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0e9fa;
+    padding: 6px 14px;
+    border-radius: 40px;
+  }
+
+  .size-control label {
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .size-control input {
+    width: 60px;
+    padding: 6px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--green), #00b4d8);
+    color: white;
+    font-weight: 900;
+    font-size: 16px;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    margin-top: 16px;
+    width: 100%;
+  }
+
+  .btn-submit:hover {
+    transform: scale(1.02);
+  }
+
+  /* СПИСОК ТОВАРІВ */
+  .products-list {
+    background: white;
+    border-radius: 40px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  }
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .products-header h2 {
+    font-family: 'Paytone One', sans-serif;
+    font-size: 28px;
+    color: var(--purple-dark);
+  }
+
+  .search-admin {
+    display: flex;
+    gap: 12px;
+    background: #f5f0fa;
+    padding: 6px 12px;
+    border-radius: 60px;
+  }
+
+  .search-admin input {
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    width: 200px;
+    outline: none;
+  }
+
+  .search-admin button {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 60px;
+    cursor: pointer;
+  }
+
+  .export-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+
+  .export-btn {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 60px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .export-btn:hover {
+    transform: scale(1.02);
+  }
+
+  /* ТАБЛИЦЯ */
+  .products-table {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0e6f5;
+  }
+
+  th {
+    background: #f9f5ff;
+    font-weight: 800;
+    color: var(--purple-dark);
+  }
+
+  .product-image-cell {
+    width: 80px;
+  }
+
+  .product-image-cell img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .product-emoji {
+    font-size: 45px;
+  }
+
+  .edit-btn, .delete-btn {
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 0 4px;
+  }
+
+  .edit-btn {
+    background: #f0e9fa;
+    color: var(--purple);
+  }
+
+  .delete-btn {
+    background: #ffe8f0;
+    color: #ff5c8a;
+  }
+
+  .edit-btn:hover, .delete-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .hit-badge {
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    color: #4a0e78;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-block;
+  }
+
+  .sale-badge {
+    background: linear-gradient(135deg, #ff5c8a, #ff2d6e);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-block;
+  }
+
+  /* МОДАЛЬНЕ ВІКНО */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 48px;
+    max-width: 650px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 32px;
+  }
+
+  .modal-close {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+  }
+
+  .modal-save-btn {
+    background: linear-gradient(135deg, var(--green), #00b4d8);
+    color: white;
+    font-weight: 800;
+    padding: 14px;
+    border: none;
+    border-radius: 60px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, var(--green), #00b4d8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 60px;
+    z-index: 1001;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* ЛОГІН МОДАЛКА */
+  .login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-box {
+    background: white;
+    border-radius: 48px;
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .login-box h2 {
+    font-family: 'Paytone One', sans-serif;
+    margin-bottom: 24px;
+    color: var(--purple-dark);
+  }
+
+  .login-box input {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: 2px solid #f0e6f5;
+    border-radius: 60px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .login-btn {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 60px;
+    font-weight: 800;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .error-msg {
+    color: #ff5c8a;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px;
+    color: #aaa;
+  }
+
+  @media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+    th, td { font-size: 12px; padding: 10px 6px; }
+    .product-image-cell { width: 60px; }
+    .product-image-cell img { width: 45px; height: 45px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <h2><i class="fas fa-user-shield"></i> Вхід в адмінку</h2>
+    <input type="text" id="loginUsername" placeholder="Логін" autocomplete="off">
+    <input type="password" id="loginPassword" placeholder="Пароль">
+    <button class="login-btn" id="doLoginBtn">Увійти</button>
+    <div id="loginError" class="error-msg"></div>
+  </div>
+</div>
+
+<div class="admin-header">
+  <h1><i class="fas fa-user-shield"></i> СвятоЛаб Адмін</h1>
+  <p>Керування товарами: додавання, редагування, видалення</p>
+  <div class="header-buttons">
+    <button class="go-to-site" id="goToSiteBtn"><i class="fas fa-globe"></i> На головну сайту</button>
+    <button class="back-home" id="backHomeBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+  </div>
+</div>
+
+<div id="adminContainer" class="admin-container" style="display: none;">
+  <!-- ФОРМА ДОДАВАННЯ -->
+  <div class="add-product-form">
+    <div class="form-title"><i class="fas fa-plus-circle"></i> Додати новий товар</div>
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label><i class="fas fa-image"></i> Зображення товару</label>
+        <div class="image-upload-section">
+          <div class="image-tabs">
+            <span class="image-tab active" data-type="emoji">😊 Емодзі</span>
+            <span class="image-tab" data-type="url">🌐 URL картинки</span>
+            <span class="image-tab" data-type="file">📁 Завантажити файл</span>
+          </div>
+          <input type="text" id="newEmoji" placeholder="Введіть емодзі" value="🎁">
+          <input type="text" id="newImageUrl" placeholder="Або вставте URL картинки" style="display: none;">
+          <input type="file" id="newImageFile" accept="image/*" style="display: none;">
+          <div class="image-preview" id="newImagePreview">🎁</div>
+          <div class="size-controls">
+            <div class="size-control"><label>Ширина:</label><input type="number" id="newImageWidth" value="160" placeholder="px"></div>
+            <div class="size-control"><label>Висота:</label><input type="number" id="newImageHeight" value="160" placeholder="px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-tag"></i> Назва товару *</label>
+        <input type="text" id="newName" placeholder="Введіть назву">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-dollar-sign"></i> Звичайна ціна (грн) *</label>
+        <input type="number" id="newPrice" placeholder="Ціна">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-percent"></i> Акційна ціна (грн)</label>
+        <input type="number" id="newOldPrice" placeholder="Залиште порожнім">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-list"></i> Категорія</label>
+        <select id="newCategory">
+          <option value="costumes">🦸 Костюми</option>
+          <option value="gifts">🎁 Подарунки</option>
+          <option value="birthday">🎂 День народження</option>
+          <option value="decor">🎊 Декор</option>
+          <option value="edible">🍬 Їстівні букети</option>
+          <option value="balloons">🎈 Шари</option>
+        </select>
+      </div>
+      <div class="form-group checkbox-group">
+        <label><i class="fas fa-fire"></i> Хіт продажу</label>
+        <input type="checkbox" id="newIsHit">
+      </div>
+      <div class="form-group full-width">
+        <label><i class="fas fa-align-left"></i> Опис товару</label>
+        <textarea id="newDescription" rows="3" placeholder="Детальний опис товару..."></textarea>
+      </div>
+      <div class="form-group full-width">
+        <label><i class="fas fa-list-ul"></i> Характеристики (через кому)</label>
+        <textarea id="newFeatures" rows="2" placeholder="Наприклад: Висока якість, 50 кульок, Яскраві кольори"></textarea>
+      </div>
+    </div>
+    <button class="btn-submit" id="addProductBtn"><i class="fas fa-plus"></i> Додати товар</button>
+  </div>
+
+  <!-- СПИСОК ТОВАРІВ -->
+  <div class="products-list">
+    <div class="products-header">
+      <h2><i class="fas fa-boxes"></i> Всі товари</h2>
+      <div class="search-admin">
+        <input type="text" id="searchProducts" placeholder="Пошук...">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+    <div class="products-table">
+      <table>
+        <thead>
+          <tr><th>Фото</th><th>Назва</th><th>Ціна</th><th>Акція</th><th>Категорія</th><th>Хіт</th><th>Дії</th></tr>
+        </thead>
+        <tbody id="productsTableBody"></tbody>
+      </table>
+    </div>
+    <div class="export-buttons">
+      <button class="export-btn" id="exportBtn"><i class="fas fa-download"></i> Експортувати JSON</button>
+      <label class="export-btn" style="cursor:pointer;"><i class="fas fa-upload"></i> Імпортувати JSON <input type="file" id="importFile" accept=".json" style="display:none;"></label>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <div class="modal-close">&times;</div>
+    <h3 style="font-family:'Paytone One'; margin-bottom:20px;"><i class="fas fa-edit"></i> Редагування товару</h3>
+    <div id="editFormContainer"></div>
+  </div>
+</div>
+
+<script>
+  // ПОЧАТКОВІ ТОВАРИ (порожній масив)
+  let products = [];
+  let searchQuery = '';
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  function saveProducts() {
+    localStorage.setItem('svyatolab_products', JSON.stringify(products));
+    showToast('✅ Товари збережено локально');
+  }
+
+  // Експорт JSON
+  function exportJSON() {
+    const dataStr = JSON.stringify(products, null, 2);
+    const blob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'products.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📁 Файл products.json скачано');
+  }
+
+  // Імпорт JSON
+  function importJSON(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (Array.isArray(imported)) {
+          products = imported;
+          saveProducts();
+          renderProductsTable();
+          showToast('✅ Товари імпортовано! Не забудьте завантажити products.json на GitHub');
+        } else {
+          showToast('❌ Невірний формат файлу', true);
+        }
+      } catch (err) {
+        showToast('❌ Помилка читання файлу', true);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function showToast(msg, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.background = isError ? 'linear-gradient(135deg, #ff5c8a, #ff2d6e)' : 'linear-gradient(135deg, #06d6a0, #00b4d8)';
+    toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  }
+
+  function getCategoryName(cat) {
+    const names = {
+      costumes: '🦸 Костюми', gifts: '🎁 Подарунки', birthday: '🎂 День народження',
+      decor: '🎊 Декор', edible: '🍬 Їстівні букети', balloons: '🎈 Шари'
+    };
+    return names[cat] || cat;
+  }
+
+  function renderProductImage(product) {
+    const width = product.imageWidth || 60;
+    const height = product.imageHeight || 60;
+    
+    if (product.imageType === 'url' || product.imageType === 'file') {
+      return `<img src="${product.imageValue}" style="width:${width}px; height:${height}px; object-fit:cover; border-radius:12px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:40px>🎁</span>'">`;
+    } else {
+      return `<span style="font-size:45px;">${product.imageValue || '🎁'}</span>`;
+    }
+  }
+
+  function renderProductsTable() {
+    const tbody = document.getElementById('productsTableBody');
+    let filtered = products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    if (filtered.length === 0) {
+      tbody.innerHTML = '</tr><td colspan="7" class="empty-state">📦 Немає товарів. Додайте перший!</td></tr>';
+      return;
+    }
+    tbody.innerHTML = filtered.map(p => `
+      <tr>
+        <td class="product-image-cell">${renderProductImage(p)}</td>
+        <td><strong>${p.name}</strong><br><small>${p.description?.substring(0, 40) || ''}</small></td>
+        <td>${p.price} грн</td>
+        <td>${p.oldPrice ? `<span class="sale-badge">-${Math.round((1 - p.price/p.oldPrice)*100)}%</span><br><span style="font-size:12px; text-decoration:line-through;">${p.oldPrice} грн</span>` : '-'}</td>
+        <td>${getCategoryName(p.category)}</td>
+        <td>${p.isHit ? '<span class="hit-badge">🔥 Хіт</span>' : '-'}</td>
+        <td><button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i> Ред</button> <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash"></i> Вид</button></td>
+      </tr>
+    `).join('');
+    
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.onclick = () => openEditModal(parseInt(btn.dataset.id));
+    });
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.onclick = () => {
+        if (confirm('Видалити товар?')) {
+          products = products.filter(p => p.id !== parseInt(btn.dataset.id));
+          saveProducts();
+          renderProductsTable();
+          showToast('✅ Товар видалено');
+        }
+      };
+    });
+  }
+
+  async function openEditModal(id) {
+    const p = products.find(p => p.id === id);
+    if (!p) return;
+    const container = document.getElementById('editFormContainer');
+    container.innerHTML = `
+      <div class="image-upload-section">
+        <div class="image-tabs">
+          <span class="image-tab ${p.imageType === 'emoji' ? 'active' : ''}" data-type="emoji">😊 Емодзі</span>
+          <span class="image-tab ${p.imageType === 'url' ? 'active' : ''}" data-type="url">🌐 URL картинки</span>
+          <span class="image-tab ${p.imageType === 'file' ? 'active' : ''}" data-type="file">📁 Завантажити</span>
+        </div>
+        <input type="text" id="editEmoji" placeholder="Емодзі" value="${p.imageType === 'emoji' ? p.imageValue : '🎁'}" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px; display: ${p.imageType === 'emoji' ? 'block' : 'none'}">
+        <input type="text" id="editImageUrl" placeholder="URL картинки" value="${p.imageType === 'url' ? p.imageValue : ''}" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px; display: ${p.imageType === 'url' ? 'block' : 'none'}">
+        <input type="file" id="editImageFile" accept="image/*" style="display: ${p.imageType === 'file' ? 'block' : 'none'}">
+        <div class="image-preview" id="editImagePreview">${p.imageType === 'emoji' ? p.imageValue : (p.imageValue ? `<img src="${p.imageValue}" style="width:100%; height:100%; object-fit:cover;">` : '🎁')}</div>
+        <div class="size-controls">
+          <div class="size-control"><label>Ширина:</label><input type="number" id="editImageWidth" value="${p.imageWidth || 160}" placeholder="px"></div>
+          <div class="size-control"><label>Висота:</label><input type="number" id="editImageHeight" value="${p.imageHeight || 160}" placeholder="px"></div>
+        </div>
+      </div>
+      <div><label>Назва:</label><input type="text" id="editName" value="${p.name.replace(/"/g, '&quot;')}" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;"></div>
+      <div><label>Ціна:</label><input type="number" id="editPrice" value="${p.price}" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;"></div>
+      <div><label>Акційна ціна:</label><input type="number" id="editOldPrice" value="${p.oldPrice || ''}" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;"></div>
+      <div><label>Категорія:</label>
+        <select id="editCategory" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;">
+          <option value="costumes" ${p.category === 'costumes' ? 'selected' : ''}>🦸 Костюми</option>
+          <option value="gifts" ${p.category === 'gifts' ? 'selected' : ''}>🎁 Подарунки</option>
+          <option value="birthday" ${p.category === 'birthday' ? 'selected' : ''}>🎂 День народження</option>
+          <option value="decor" ${p.category === 'decor' ? 'selected' : ''}>🎊 Декор</option>
+          <option value="edible" ${p.category === 'edible' ? 'selected' : ''}>🍬 Їстівні букети</option>
+          <option value="balloons" ${p.category === 'balloons' ? 'selected' : ''}>🎈 Шари</option>
+        </select>
+      </div>
+      <div style="margin:10px 0;"><label><input type="checkbox" id="editIsHit" ${p.isHit ? 'checked' : ''}> 🔥 Хіт продажу</label></div>
+      <div><label>Опис:</label><textarea id="editDescription" rows="3" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;">${p.description || ''}</textarea></div>
+      <div><label>Характеристики (через кому):</label><textarea id="editFeatures" rows="2" style="width:100%; padding:10px; margin:10px 0; border:2px solid #f0e6f5; border-radius:20px;">${p.features ? p.features.join(', ') : ''}</textarea></div>
+      <button class="modal-save-btn" id="saveEditBtn">💾 Зберегти</button>
+    `;
+
+    const tabs = container.querySelectorAll('.image-tab');
+    const emojiInput = container.querySelector('#editEmoji');
+    const urlInput = container.querySelector('#editImageUrl');
+    const fileInput = container.querySelector('#editImageFile');
+    const preview = container.querySelector('#editImagePreview');
+
+    async function updatePreview() {
+      const activeTab = container.querySelector('.image-tab.active');
+      if (!activeTab) return;
+      const type = activeTab.dataset.type;
+      if (type === 'emoji') {
+        preview.innerHTML = emojiInput.value || '🎁';
+      } else if (type === 'url') {
+        const url = urlInput.value;
+        preview.innerHTML = url ? `<img src="${url}" style="width:100%; height:100%; object-fit:cover;">` : '🌐';
+      } else if (type === 'file') {
+        const file = fileInput.files[0];
+        if (file) {
+          const base64 = await fileToBase64(file);
+          preview.innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+          fileInput.dataset.tempBase64 = base64;
+        }
+      }
+    }
+
+    tabs.forEach(tab => {
+      tab.onclick = () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const type = tab.dataset.type;
+        emojiInput.style.display = type === 'emoji' ? 'block' : 'none';
+        urlInput.style.display = type === 'url' ? 'block' : 'none';
+        fileInput.style.display = type === 'file' ? 'block' : 'none';
+        updatePreview();
+      };
+    });
+    emojiInput.oninput = updatePreview;
+    urlInput.oninput = updatePreview;
+    fileInput.onchange = updatePreview;
+
+    container.querySelector('#saveEditBtn').onclick = async () => {
+      const idx = products.findIndex(prod => prod.id === id);
+      if (idx !== -1) {
+        const activeTab = container.querySelector('.image-tab.active');
+        let imageType = 'emoji';
+        let imageValue = emojiInput.value || '🎁';
+        if (activeTab) {
+          const type = activeTab.dataset.type;
+          if (type === 'url') {
+            const url = urlInput.value;
+            if (url) { imageType = 'url'; imageValue = url; }
+          } else if (type === 'file') {
+            const file = fileInput.files[0];
+            if (file) { imageType = 'file'; imageValue = await fileToBase64(file); }
+            else if (fileInput.dataset.tempBase64) { imageType = 'file'; imageValue = fileInput.dataset.tempBase64; }
+          }
+        }
+        products[idx] = {
+          id: id,
+          name: container.querySelector('#editName').value,
+          price: parseInt(container.querySelector('#editPrice').value) || 0,
+          oldPrice: container.querySelector('#editOldPrice').value ? parseInt(container.querySelector('#editOldPrice').value) : null,
+          imageType: imageType,
+          imageValue: imageValue,
+          imageWidth: parseInt(container.querySelector('#editImageWidth').value) || 160,
+          imageHeight: parseInt(container.querySelector('#editImageHeight').value) || 160,
+          category: container.querySelector('#editCategory').value,
+          isHit: container.querySelector('#editIsHit').checked,
+          description: container.querySelector('#editDescription').value,
+          features: container.querySelector('#editFeatures').value.split(',').map(f => f.trim()).filter(f => f)
+        };
+      }
+      saveProducts();
+      renderProductsTable();
+      document.getElementById('editModal').classList.remove('active');
+      showToast('✅ Товар оновлено');
+    };
+    document.getElementById('editModal').classList.add('active');
+  }
+
+  async function addProduct() {
+    let imageType = 'emoji';
+    let imageValue = document.getElementById('newEmoji').value || '🎁';
+    
+    const activeTab = document.querySelector('.add-product-form .image-tab.active');
+    if (activeTab) {
+      const type = activeTab.dataset.type;
+      if (type === 'url') {
+        const url = document.getElementById('newImageUrl').value;
+        if (url) { imageType = 'url'; imageValue = url; }
+      } else if (type === 'file') {
+        const file = document.getElementById('newImageFile').files[0];
+        if (file) { imageType = 'file'; imageValue = await fileToBase64(file); }
+      }
+    }
+    
+    const name = document.getElementById('newName').value;
+    const price = parseInt(document.getElementById('newPrice').value);
+    if (!name || !price) {
+      showToast('❌ Заповніть назву та ціну', true);
+      return;
+    }
+    
+    const newId = Math.max(...products.map(p => p.id), 0) + 1;
+    products.push({
+      id: newId,
+      name: name,
+      price: price,
+      oldPrice: document.getElementById('newOldPrice').value ? parseInt(document.getElementById('newOldPrice').value) : null,
+      imageType: imageType,
+      imageValue: imageValue,
+      imageWidth: parseInt(document.getElementById('newImageWidth').value) || 160,
+      imageHeight: parseInt(document.getElementById('newImageHeight').value) || 160,
+      category: document.getElementById('newCategory').value,
+      isHit: document.getElementById('newIsHit').checked,
+      description: document.getElementById('newDescription').value,
+      features: document.getElementById('newFeatures').value.split(',').map(f => f.trim()).filter(f => f)
+    });
+    saveProducts();
+    renderProductsTable();
+    
+    document.getElementById('newName').value = '';
+    document.getElementById('newPrice').value = '';
+    document.getElementById('newOldPrice').value = '';
+    document.getElementById('newDescription').value = '';
+    document.getElementById('newFeatures').value = '';
+    document.getElementById('newIsHit').checked = false;
+    document.getElementById('newEmoji').value = '🎁';
+    document.getElementById('newImageUrl').value = '';
+    document.getElementById('newImageFile').value = '';
+    document.getElementById('newImagePreview').innerHTML = '🎁';
+    
+    showToast(`✅ Товар "${name}" додано!`);
+  }
+
+  function setupAddForm() {
+    const tabs = document.querySelectorAll('.add-product-form .image-tab');
+    const emojiInput = document.getElementById('newEmoji');
+    const urlInput = document.getElementById('newImageUrl');
+    const fileInput = document.getElementById('newImageFile');
+    const preview = document.getElementById('newImagePreview');
+
+    tabs.forEach(tab => {
+      tab.onclick = () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const type = tab.dataset.type;
+        emojiInput.style.display = type === 'emoji' ? 'block' : 'none';
+        urlInput.style.display = type === 'url' ? 'block' : 'none';
+        fileInput.style.display = type === 'file' ? 'block' : 'none';
+        if (type === 'emoji') preview.innerHTML = emojiInput.value || '🎁';
+        else if (type === 'url') preview.innerHTML = urlInput.value ? `<img src="${urlInput.value}" style="width:100%; height:100%; object-fit:cover;">` : '🌐';
+        else preview.innerHTML = '📁';
+      };
+    });
+    emojiInput.oninput = () => {
+      if (document.querySelector('.add-product-form .image-tab.active').dataset.type === 'emoji')
+        preview.innerHTML = emojiInput.value || '🎁';
+    };
+    urlInput.oninput = () => {
+      if (document.querySelector('.add-product-form .image-tab.active').dataset.type === 'url')
+        preview.innerHTML = urlInput.value ? `<img src="${urlInput.value}" style="width:100%; height:100%; object-fit:cover;">` : '🌐';
+    };
+    fileInput.onchange = () => {
+      if (document.querySelector('.add-product-form .image-tab.active').dataset.type === 'file') {
+        const file = fileInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+          reader.readAsDataURL(file);
+        }
+      }
+    };
+  }
+
+  // Завантаження товарів з localStorage
+  function loadProductsFromLocal() {
+    const saved = localStorage.getItem('svyatolab_products');
+    if (saved && saved !== '[]') {
+      products = JSON.parse(saved);
+    } else {
+      products = [];
+    }
+    renderProductsTable();
+  }
+
+  function initLogin() {
+    const loginOverlay = document.getElementById('loginOverlay');
+    const adminContainer = document.getElementById('adminContainer');
+    const loginBtn = document.getElementById('doLoginBtn');
+    const loginUser = document.getElementById('loginUsername');
+    const loginPass = document.getElementById('loginPassword');
+    const errorMsg = document.getElementById('loginError');
+
+    loginBtn.onclick = () => {
+      if (loginUser.value === '1111' && loginPass.value === '1111') {
+        loginOverlay.style.display = 'none';
+        adminContainer.style.display = 'block';
+        loadProductsFromLocal();
+        setupAddForm();
+        showToast('Ласкаво просимо в адмін-панель! 🎉');
+      } else {
+        errorMsg.textContent = 'Невірний логін або пароль';
+      }
+    };
+  }
+
+  // ПОДІЇ
+  document.getElementById('addProductBtn').onclick = addProduct;
+  document.getElementById('searchBtn').onclick = () => {
+    searchQuery = document.getElementById('searchProducts').value;
+    renderProductsTable();
+  };
+  document.getElementById('searchProducts').onkeyup = () => {
+    searchQuery = document.getElementById('searchProducts').value;
+    renderProductsTable();
+  };
+  document.getElementById('goToSiteBtn').onclick = () => window.location.href = 'index.html';
+  document.getElementById('backHomeBtn').onclick = () => window.history.back();
+  document.getElementById('exportBtn').onclick = exportJSON;
+  document.getElementById('importFile').onchange = (e) => {
+    if (e.target.files[0]) importJSON(e.target.files[0]);
+    e.target.value = '';
+  };
+  document.querySelector('.export-buttons label').onclick = () => document.getElementById('importFile').click();
+
+  const modal = document.getElementById('editModal');
+  document.querySelector('.modal-close').onclick = () => modal.classList.remove('active');
+  modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+
+  initLogin();
+</script>
+</body>
+</html>
