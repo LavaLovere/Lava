@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Костюм Супергероя",
+    "price": 350,
+    "oldPrice": null,
+    "imageType": "emoji",
+    "imageValue": "🦸",
+    "imageWidth": 160,
+    "imageHeight": 160,
+    "category": "costumes",
+    "isHit": true,
+    "description": "Костюм супергероя. Розміри S-XXL. Оренда 1 день.",
+    "features": ["Розміри S-XXL", "Маска в комплекті"]
+  }
+]
